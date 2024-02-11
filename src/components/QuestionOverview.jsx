@@ -1,23 +1,32 @@
 import { useState } from "react";
 import { questions } from "./../../questions";
-console.log(questions);
+
 export default function QuestionOverview({ quizStep, setQuizStep }) {
-  const question = questions[quizStep];
+  const quizStepObj = questions[quizStep];
   const [selectedAnswer, setSelectedAnswer] = useState(-1);
+  const [buttonClass, setButtonClass] = useState();
+
+  function handleSelectAnswer(index) {
+    setSelectedAnswer(index);
+    if (index === quizStepObj.correctAnswerIndex) {
+      setButtonClass("correct");
+      setQuizStep((prevQuizStep) => prevQuizStep + 1);
+    } else {
+      setButtonClass("selected");
+    }
+  }
 
   return (
     <section id="quiz">
       <div id="question">
         <progress value={2} max={3} />
-        <h1>{question.question}</h1>
+        <h1>{quizStepObj.question}</h1>
         <ul id="answers">
-          {question.answers.map((question, index) => (
+          {quizStepObj.answers.map((question, index) => (
             <li key={index} className="answer">
               <button
-                onClick={() => setSelectedAnswer(index)}
-                className={
-                  selectedAnswer === question.correctAnswerIndex ? "selected" : undefined
-                }
+                onClick={() => handleSelectAnswer(index)}
+                className={selectedAnswer === index ? buttonClass : undefined}
               >
                 {question}
               </button>
