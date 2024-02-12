@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { questions } from "./../../questions";
+import CountDown from "./CountDown";
+
+const TIMER = 3000;
 
 export default function QuestionOverview({ quizStep, setQuizStep }) {
   const quizStepObj = questions[quizStep];
@@ -8,18 +11,29 @@ export default function QuestionOverview({ quizStep, setQuizStep }) {
 
   function handleSelectAnswer(index) {
     setSelectedAnswer(index);
+
     if (index === quizStepObj.correctAnswerIndex) {
       setButtonClass("correct");
-      setQuizStep((prevQuizStep) => prevQuizStep + 1);
+      setTimeout(() => {
+        setQuizStep((prevQuizStep) => prevQuizStep + 1);
+        setSelectedAnswer(-1);
+        setButtonClass();
+      }, 1000);
     } else {
       setButtonClass("selected");
     }
   }
 
+  setTimeout(() => {
+    setQuizStep((prevQuizStep) => prevQuizStep + 1);
+    setSelectedAnswer(-1);
+    setButtonClass("wrong");
+  }, TIMER);
+
   return (
     <section id="quiz">
       <div id="question">
-        <progress value={2} max={3} />
+        <CountDown timer={TIMER} />
         <h1>{quizStepObj.question}</h1>
         <ul id="answers">
           {quizStepObj.answers.map((question, index) => (
