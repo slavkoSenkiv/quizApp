@@ -164,8 +164,8 @@ header h1 {
   transition: all 0.2s ease-in-out;
 }
 
-.answer button:hover,
-.answer button:focus {
+.answer button:hover {
+  /* .answer button:focus */
   /* background: linear-gradient(180deg, #bf48f6 0%, #9b50f2 100%); */
   background: #9d5af5;
   color: white;

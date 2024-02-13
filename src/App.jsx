@@ -6,13 +6,15 @@ import Summary from "./components/Summary";
 
 function App() {
   const [quizStep, setQuizStep] = useState(0);
+  const [score, setScore] = useState(0)
 
   return (
     <>
-      <Header />
+      <Header score={score}/>
       {quizStep < questions.length ? (
         <QuestionOverview 
-          quizStep={quizStep} 
+          quizStep={quizStep}
+          setScore={setScore} 
           setQuizStep={setQuizStep}/>
       ) : (
         <Summary />

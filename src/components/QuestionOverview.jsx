@@ -1,34 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { questions } from "./../../questions";
 import CountDown from "./CountDown";
 
-const TIMER = 3000;
+const TIMER = 5000;
+//const FREEZTIME = 1000;
 
-export default function QuestionOverview({ quizStep, setQuizStep }) {
+export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
   const quizStepObj = questions[quizStep];
   const [selectedAnswer, setSelectedAnswer] = useState(-1);
   const [buttonClass, setButtonClass] = useState();
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (selectedAnswer != quizStepObj.correctAnswerIndex) {
+        setButtonClass("wrong");
+      }
+    }, 3000);
+
+    setTimeout(() => {
+      setQuizStep((prevScore) => prevScore + 1);
+      setButtonClass();
+    }, TIMER);
+  }, [quizStep]);
+
   function handleSelectAnswer(index) {
     setSelectedAnswer(index);
-
-    if (index === quizStepObj.correctAnswerIndex) {
+    if (selectedAnswer === quizStepObj.correctAnswerIndex) {
+      setScore((prevScore) => prevScore + 1);
       setButtonClass("correct");
       setTimeout(() => {
         setQuizStep((prevQuizStep) => prevQuizStep + 1);
-        setSelectedAnswer(-1);
         setButtonClass();
       }, 1000);
     } else {
       setButtonClass("selected");
     }
   }
-
-  setTimeout(() => {
-    setQuizStep((prevQuizStep) => prevQuizStep + 1);
-    setSelectedAnswer(-1);
-    setButtonClass("wrong");
-  }, TIMER);
 
   return (
     <section id="quiz">
