@@ -3,7 +3,6 @@ import { questions } from "./../../questions";
 import CountDown from "./CountDown";
 
 const TIMER = 5000;
-//const FREEZTIME = 1000;
 
 export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
   const quizStepObj = questions[quizStep];
@@ -11,23 +10,21 @@ export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
   const [buttonClass, setButtonClass] = useState();
 
   useEffect(() => {
-    setTimeout(() => {
-      if (selectedAnswer != quizStepObj.correctAnswerIndex) {
-        setButtonClass("wrong");
-      }
-    }, 3000);
-
-    setTimeout(() => {
-      setQuizStep((prevScore) => prevScore + 1);
+    const timeoutId = setTimeout(() => {
+      setQuizStep((prevQuizStep) => prevQuizStep + 1);
       setButtonClass();
     }, TIMER);
-  }, [quizStep]);
+  
+    return () => clearTimeout(timeoutId);
+  }, [quizStep]);;
 
   function handleSelectAnswer(index) {
     setSelectedAnswer(index);
-    if (selectedAnswer === quizStepObj.correctAnswerIndex) {
+
+    if (index === quizStepObj.correctAnswerIndex) {
       setScore((prevScore) => prevScore + 1);
       setButtonClass("correct");
+      clearTimeout();
       setTimeout(() => {
         setQuizStep((prevQuizStep) => prevQuizStep + 1);
         setButtonClass();

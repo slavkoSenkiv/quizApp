@@ -177,6 +177,11 @@ header h1 {
   background: #f5a76c;
   color: #2c203d;
 }
+.answer button.corect-late {
+  /* background: linear-gradient(180deg, #fbda81 0%, #f8b173 100%); */
+  background: green;
+  color: white;
+}
 
 .answer button.correct {
   /* background: linear-gradient(180deg, #a1fa61 0%, #52d482 100%); */

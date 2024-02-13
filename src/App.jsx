@@ -8,6 +8,11 @@ function App() {
   const [quizStep, setQuizStep] = useState(0);
   const [score, setScore] = useState(0)
 
+  function handleRestart() {
+    setQuizStep(0);
+    setScore(0);
+  }
+
   return (
     <>
       <Header score={score}/>
@@ -17,7 +22,7 @@ function App() {
           setScore={setScore} 
           setQuizStep={setQuizStep}/>
       ) : (
-        <Summary />
+        <Summary restart={handleRestart}/>
       )}
     </>
   );
