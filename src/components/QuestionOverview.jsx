@@ -7,30 +7,36 @@ const FREEZE = 500;
 
 export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
   const quizStepObj = questions[quizStep];
-  const [selectedAnswer, setSelectedAnswer] = useState(-1);
-  const [buttonClass, setButtonClass] = useState();
+  const [buttonClasses, setButtonClasses] = useState(["", "", ""]);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setTimeout(() => {
-        if (selectedAnswer !== quizStepObj.correctAnswerIndex) {
-          setButtonClass("wrong");
-        } else {
-          setButtonClass("correct");
+    setTimeout(() => {
+      setButtonClasses((prevButtonClasses) => {
+        const updatedClasses = [...prevButtonClasses];
+        const selectedAnswerIndex = updatedClasses.findIndex(
+          (className) => className === "selected"
+        );
+        if (selectedAnswerIndex === quizStepObj.correctAnswerIndex) {
+          updatedClasses[selectedAnswerIndex] = "correct";
           setScore((prevScore) => prevScore + 1);
+        } else {
+          updatedClasses[selectedAnswerIndex] = "wrong";
         }
-      }, TIMER - FREEZE);
+        return updatedClasses;
+      });
+    }, TIMER - FREEZE);
 
+    setTimeout(() => {
       setQuizStep((prevQuizStep) => prevQuizStep + 1);
-      setButtonClass();
     }, TIMER);
-
-    return () => clearTimeout(timeoutId);
   }, [quizStep]);
 
   function handleSelectAnswer(index) {
-    setSelectedAnswer(index);
-    setButtonClass("selected");
+    setButtonClasses(() => {
+      const updatedClasses = ["", "", ""];
+      updatedClasses[index] = "selected";
+      return updatedClasses;
+    });
   }
 
   return (
@@ -43,7 +49,7 @@ export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
             <li key={index} className="answer">
               <button
                 onClick={() => handleSelectAnswer(index)}
-                className={selectedAnswer === index ? buttonClass : undefined}
+                className={buttonClasses[index]}
               >
                 {question}
               </button>
@@ -54,38 +60,3 @@ export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
     </section>
   );
 }
-
-/* 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (selectedAnswer !== quizStepObj.correctAnswerIndex) {
-        setButtonClass("wrong");
-        setTimeout(() => {
-          setQuizStep((prevQuizStep) => prevQuizStep + 1);
-          setButtonClass();
-        }, FREEZE);
-      } else {
-        setQuizStep((prevQuizStep) => prevQuizStep + 1);
-        setButtonClass();
-      }
-    }, TIMER);
-
-    return () => clearTimeout(timeoutId);
-  }, [quizStep]); 
-  
-  function handleSelectAnswer(index) {
-    setSelectedAnswer(index);
-
-    if (index === quizStepObj.correctAnswerIndex) {
-      setScore((prevScore) => prevScore + 1);
-      setButtonClass("correct");
-      clearTimeout(timeoutId);
-      setTimeout(() => {
-        setQuizStep((prevQuizStep) => prevQuizStep + 1);
-        setButtonClass();
-      }, FREEZE);
-    } else {
-      setButtonClass("selected");
-    }
-  }
-  */
