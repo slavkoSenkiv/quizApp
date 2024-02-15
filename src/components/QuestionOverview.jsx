@@ -2,12 +2,18 @@ import { useEffect, useState } from "react";
 import { questions } from "./../../questions";
 import CountDown from "./CountDown";
 
-const TIMER = 3000;
 const FREEZE = 500;
 
+function createEmptyClassHolderArr(originalArr) {
+  return new Array(originalArr.length).fill("");
+}
+
 export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
+  const TIMER = 3500;
   const quizStepObj = questions[quizStep];
-  const [buttonClasses, setButtonClasses] = useState(["", "", ""]);
+  const [buttonClasses, setButtonClasses] = useState(
+    createEmptyClassHolderArr(questions)
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -28,12 +34,13 @@ export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
 
     setTimeout(() => {
       setQuizStep((prevQuizStep) => prevQuizStep + 1);
+      setButtonClasses(createEmptyClassHolderArr(questions))
     }, TIMER);
   }, [quizStep]);
 
   function handleSelectAnswer(index) {
     setButtonClasses(() => {
-      const updatedClasses = ["", "", ""];
+      const updatedClasses = createEmptyClassHolderArr(questions);
       updatedClasses[index] = "selected";
       return updatedClasses;
     });
