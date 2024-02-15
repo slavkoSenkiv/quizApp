@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { questions } from "../questions";
 import Header from "./components/Header";
 import QuestionOverview from "./components/QuestionOverview";
