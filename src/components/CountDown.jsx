@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
 
-export default function CountDown({ timer }) {
-  const [timeLeft, setTimeLeft] = useState(timer);
-  console.log(timeLeft);
+export default function CountDown({ timeout, onTimeout }) {
+  const [remainingTime, setRemainingTime] = useState(timeout);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prevTimeLeft) => prevTimeLeft - 10);
-    }, 10);
-    return () => clearInterval(interval);
-  }, [timer]);
+    console.log("setting timeout");
+    const timer = setTimeout(onTimeout, timeout);
 
-  return <progress value={timeLeft} max={timer} />;
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("setting interval");
+    const interval = setInterval(() => {
+      setRemainingTime((prevTime) => prevTime - 100);
+    }, 100);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  return <progress id="quiestion-time" value={remainingTime} max={timeout} />;
 }

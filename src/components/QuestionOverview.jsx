@@ -1,69 +1,59 @@
-import { useEffect, useState } from "react";
-import { questions } from "./../../questions";
+import { useState, useCallback } from "react";
+import QUESTIONS from "../../questions";
+import quizCompleteImg from "../assets/quiz-complete.png";
 import CountDown from "./CountDown";
 
-const FREEZE = 500;
+export default function QuestionOverview() {
+  const [userAnswers, setUserAnswers] = useState([]);
 
-function createEmptyClassHolderArr(originalArr) {
-  return new Array(originalArr.length).fill("");
-}
+  const activeQuestionIndex = userAnswers.length;
+  const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
-export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
-  const TIMER = 3500;
-  const quizStepObj = questions[quizStep];
-  const [buttonClasses, setButtonClasses] = useState(
-    createEmptyClassHolderArr(questions)
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
+    setUserAnswers((prevUserAnswers) => {
+      return [...prevUserAnswers, selectedAnswer];
+    });
+  },
+  []);
+
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      setButtonClasses((prevButtonClasses) => {
-        const updatedClasses = [...prevButtonClasses];
-        const selectedAnswerIndex = updatedClasses.findIndex(
-          (className) => className === "selected"
-        );
-        if (selectedAnswerIndex === quizStepObj.correctAnswerIndex) {
-          updatedClasses[selectedAnswerIndex] = "correct";
-          setScore((prevScore) => prevScore + 1);
-        } else {
-          updatedClasses[selectedAnswerIndex] = "wrong";
-        }
-        return updatedClasses;
-      });
-    }, TIMER - FREEZE);
-
-    setTimeout(() => {
-      setQuizStep((prevQuizStep) => prevQuizStep + 1);
-      setButtonClasses(createEmptyClassHolderArr(questions))
-    }, TIMER);
-  }, [quizStep]);
-
-  function handleSelectAnswer(index) {
-    setButtonClasses(() => {
-      const updatedClasses = createEmptyClassHolderArr(questions);
-      updatedClasses[index] = "selected";
-      return updatedClasses;
-    });
+  if (quizIsComplete) {
+    return (
+      <div id="summary">
+        <img src={quizCompleteImg} alt="" />
+        <h2>Quiz Completed!</h2>
+      </div>
+    );
   }
 
+  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
+  shuffledAnswers.sort(() => Math.random() - 0.5);
+
   return (
-    <section id="quiz">
+    <div id="quiz">
       <div id="question">
-        <CountDown timer={TIMER} />
-        <h1>{quizStepObj.question}</h1>
+        <CountDown
+          key={activeQuestionIndex} //try key trick in alone main branch 
+          timeout={3000}
+          onTimeout={handleSkipAnswer}
+        />
+        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
         <ul id="answers">
-          {quizStepObj.answers.map((question, index) => (
-            <li key={index} className="answer">
-              <button
-                onClick={() => handleSelectAnswer(index)}
-                className={buttonClasses[index]}
-              >
-                {question}
+          {QUESTIONS[activeQuestionIndex].answers.map((answer) => (
+            <li key={answer} className="answer">
+              <button onClick={() => handleSelectAnswer(answer)}>
+                {answer}
               </button>
             </li>
           ))}
         </ul>
       </div>
-    </section>
+    </div>
   );
 }
