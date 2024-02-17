@@ -49,7 +49,7 @@ export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
   return (
     <section id="quiz">
       <div id="question">
-        <CountDown timer={TIMER} />
+        <CountDown timer={TIMER} key={quizStep}/>
         <h1>{quizStepObj.question}</h1>
         <ul id="answers">
           {quizStepObj.answers.map((question, index) => (
