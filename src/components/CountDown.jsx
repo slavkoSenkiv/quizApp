@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function CountDown({ timeout, onTimeout }) {
+export default function CountDown({ timeout, onTimeout, mode }) {
   const [remainingTime, setRemainingTime] = useState(timeout);
 
   useEffect(() => {
@@ -23,5 +23,12 @@ export default function CountDown({ timeout, onTimeout }) {
     };
   }, []);
 
-  return <progress id="quiestion-time" value={remainingTime} max={timeout} />;
+  return (
+    <progress
+      id="quiestion-time"
+      value={remainingTime}
+      max={timeout}
+      className={mode}
+    />
+  );
 }
