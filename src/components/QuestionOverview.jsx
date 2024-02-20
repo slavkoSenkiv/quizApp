@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import QUESTIONS from "../../questions";
-import quizCompleteImg from "../assets/quiz-complete.png";
 import Question from "./Question";
+import Summary from "./Summary";
+
 
 export default function QuestionOverview() {
 const [userAnswers, setUserAnswers] = useState([])
@@ -24,7 +25,7 @@ const [userAnswers, setUserAnswers] = useState([])
 
   if (quizIsComplete) {
     return (
-      <p>summary placeholder</p>
+      <Summary userAnswers={userAnswers}/>
     );
   }
 
