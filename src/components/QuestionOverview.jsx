@@ -38,5 +38,23 @@ const [userAnswers, setUserAnswers] = useState([])
         onSkipAnswer={handleSkipAnswer}
       />
     </div>
+    <section id="quiz">
+      <div id="question">
+        <CountDown timer={TIMER} key={quizStep}/>
+        <h1>{quizStepObj.question}</h1>
+        <ul id="answers">
+          {quizStepObj.answers.map((question, index) => (
+            <li key={index} className="answer">
+              <button
+                onClick={() => handleSelectAnswer(index)}
+                className={buttonClasses[index]}
+              >
+                {question}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
