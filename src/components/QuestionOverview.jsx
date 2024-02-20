@@ -1,52 +1,43 @@
-import { useEffect, useState } from "react";
-import { questions } from "./../../questions";
-import CountDown from "./CountDown";
+import { useState, useCallback } from "react";
+import QUESTIONS from "../../questions";
+import Question from "./Question";
+import Summary from "./Summary";
 
-const FREEZE = 500;
 
-function createEmptyClassHolderArr(originalArr) {
-  return new Array(originalArr.length).fill("");
-}
+export default function QuestionOverview() {
+const [userAnswers, setUserAnswers] = useState([])
+  const activeQuestionIndex = userAnswers.length;
+  const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
-export default function QuestionOverview({ quizStep, setQuizStep, setScore }) {
-  const TIMER = 3500;
-  const quizStepObj = questions[quizStep];
-  const [buttonClasses, setButtonClasses] = useState(
-    createEmptyClassHolderArr(questions)
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
+    setUserAnswers((prevUserAnswers) => {
+      return [...prevUserAnswers, selectedAnswer];
+    });
+  },
+  []);
+
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      setButtonClasses((prevButtonClasses) => {
-        const updatedClasses = [...prevButtonClasses];
-        const selectedAnswerIndex = updatedClasses.findIndex(
-          (className) => className === "selected"
-        );
-        if (selectedAnswerIndex === quizStepObj.correctAnswerIndex) {
-          updatedClasses[selectedAnswerIndex] = "correct";
-          setScore((prevScore) => prevScore + 1);
-        } else {
-          updatedClasses[selectedAnswerIndex] = "wrong";
-        }
-        return updatedClasses;
-      });
-    }, TIMER - FREEZE);
-
-    setTimeout(() => {
-      setQuizStep((prevQuizStep) => prevQuizStep + 1);
-      setButtonClasses(createEmptyClassHolderArr(questions))
-    }, TIMER);
-  }, [quizStep]);
-
-  function handleSelectAnswer(index) {
-    setButtonClasses(() => {
-      const updatedClasses = createEmptyClassHolderArr(questions);
-      updatedClasses[index] = "selected";
-      return updatedClasses;
-    });
+  if (quizIsComplete) {
+    return (
+      <Summary userAnswers={userAnswers}/>
+    );
   }
 
   return (
+    <div id="quiz">
+      <Question
+        key={activeQuestionIndex}
+        index={activeQuestionIndex}
+        onSelectAnswer={handleSelectAnswer}
+        onSkipAnswer={handleSkipAnswer}
+      />
+    </div>
     <section id="quiz">
       <div id="question">
         <CountDown timer={TIMER} key={quizStep}/>
