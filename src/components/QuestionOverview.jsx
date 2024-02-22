@@ -39,8 +39,8 @@ export default function Quiz() {
   return (
     <section id="quiz">
       <Question
-        questionText={QUESTIONS[currentQuestionIndex].text}
-        questionAnswers={QUESTIONS[currentQuestionIndex].answers}
+        key={currentQuestionIndex}
+        index={currentQuestionIndex}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />
