@@ -1,10 +1,23 @@
 import { useState } from "react";
 import QUESTIONS from "../../questions";
+import Summary from "./Summary";
 import Question from "./Question";
 
+/* 
+quizOverview
+    summary 
+    ||
+    question
+      countdown
+        progres
+      answers
+        ul>li>btn 
+*/
+
 export default function Quiz() {
-  const [answers, setAnswers] = useState([]);
+  const [answers, setAnswers] = useState([]); //(["", "","","","","","" ]);
   const currentQuestionIndex = answers.length;
+  const quizIsComplete = currentQuestionIndex === QUESTIONS.length;
 
   function handleSelectAnswer(answer) {
     setAnswers((prevAnswers) => {
@@ -18,15 +31,19 @@ export default function Quiz() {
       return [...prevAnswers, null];
     });
   }
+
+  if (quizIsComplete) {
+    return <Summary />;
+  }
+
   return (
-    <div id="quiz">
-      <progress value="2" max="3" />
+    <section id="quiz">
       <Question
         questionText={QUESTIONS[currentQuestionIndex].text}
         questionAnswers={QUESTIONS[currentQuestionIndex].answers}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />
-    </div>
+    </section>
   );
 }

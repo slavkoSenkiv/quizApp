@@ -6,7 +6,9 @@ export default function Answers({ answers, onSelect }) {
     <ul id="answers">
       {shuffledAnswers.map((answer, index) => (
         <li key={index} className="answer">
-          <button onClick={() => onSelect(answer)}>{answer}</button>
+          <button onClick={() => onSelect(answer)}>
+            {answer}
+          </button>
         </li>
       ))}
     </ul>
