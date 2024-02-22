@@ -1,15 +1,13 @@
 import Header from "./components/Header";
-import QuestionOverview from "./components/QuestionOverview";
+import Quiz from "./components/QuestionOverview";
 
-function App() {
+export default function App() {
   return (
     <>
       <Header />
       <main>
-        <QuestionOverview />
+        <Quiz />
       </main>
     </>
   );
 }
-
-export default App;

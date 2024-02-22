@@ -1,60 +1,32 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import QUESTIONS from "../../questions";
 import Question from "./Question";
-import Summary from "./Summary";
 
+export default function Quiz() {
+  const [answers, setAnswers] = useState([]);
+  const currentQuestionIndex = answers.length;
 
-export default function QuestionOverview() {
-const [userAnswers, setUserAnswers] = useState([])
-  const activeQuestionIndex = userAnswers.length;
-  const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
-
-  const handleSelectAnswer = useCallback(function handleSelectAnswer(
-    selectedAnswer
-  ) {
-    setUserAnswers((prevUserAnswers) => {
-      return [...prevUserAnswers, selectedAnswer];
+  function handleSelectAnswer(answer) {
+    setAnswers((prevAnswers) => {
+      return [...prevAnswers, answer];
     });
-  },
-  []);
-
-  const handleSkipAnswer = useCallback(
-    () => handleSelectAnswer(null),
-    [handleSelectAnswer]
-  );
-
-  if (quizIsComplete) {
-    return (
-      <Summary userAnswers={userAnswers}/>
-    );
+    console.log(answers);
   }
 
+  function handleSkipAnswer() {
+    setAnswers((prevAnswers) => {
+      return [...prevAnswers, null];
+    });
+  }
   return (
     <div id="quiz">
+      <progress value="2" max="3" />
       <Question
-        key={activeQuestionIndex}
-        index={activeQuestionIndex}
+        questionText={QUESTIONS[currentQuestionIndex].text}
+        questionAnswers={QUESTIONS[currentQuestionIndex].answers}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />
     </div>
-    <section id="quiz">
-      <div id="question">
-        <CountDown timer={TIMER} key={quizStep}/>
-        <h1>{quizStepObj.question}</h1>
-        <ul id="answers">
-          {quizStepObj.answers.map((question, index) => (
-            <li key={index} className="answer">
-              <button
-                onClick={() => handleSelectAnswer(index)}
-                className={buttonClasses[index]}
-              >
-                {question}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
   );
 }
