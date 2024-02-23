@@ -3,6 +3,14 @@ import Answers from "./Answers";
 import { useState } from "react";
 import QUESTIONS from "../../questions";
 
+/*
+answers   
+  countdown
+    progres
+  answers
+    ul>li>btn       
+*/
+
 export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
   const [answer, setAnswer] = useState({
     selectedAnswer: "",
@@ -10,12 +18,10 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
   });
 
   let timer = 10000;
-
   if (answer.selectedAnswer) {
     timer = 1000;
   }
-
-  if (answer.isCorrect != null) {
+  if (answer.isCorrect !== null) {
     timer = 2000;
   }
 
@@ -28,7 +34,7 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
     setTimeout(() => {
       setAnswer({
         selectedAnswer: answer,
-        isCorrect: QUESTIONS[index].answers[0] === answer,
+        isCorrect: answer === QUESTIONS[index].answers[0],
       });
 
       setTimeout(() => {
@@ -39,7 +45,7 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
 
   let answerState = "";
 
-  if (answer.selectedAnswer && answer.isCorrect != null) {
+  if (answer.selectedAnswer && answer.isCorrect !== null) {
     answerState = answer.isCorrect ? "correct" : "wrong";
   } else if (answer.selectedAnswer) {
     answerState = "answered";

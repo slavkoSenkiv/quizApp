@@ -4,16 +4,13 @@ export default function CountDown({ timeout, onTimeout, mode }) {
   const [remainingTime, setRemainingTime] = useState(timeout);
 
   useEffect(() => {
-    console.log("setting timeout");
     const timer = setTimeout(onTimeout, timeout);
-
     return () => {
       clearTimeout(timer);
     };
   }, []);
 
   useEffect(() => {
-    console.log("setting interval");
     const interval = setInterval(() => {
       setRemainingTime((prevTime) => prevTime - 100);
     }, 100);
@@ -23,12 +20,5 @@ export default function CountDown({ timeout, onTimeout, mode }) {
     };
   }, []);
 
-  return (
-    <progress
-      id="quiestion-time"
-      value={remainingTime}
-      max={timeout}
-      className={mode}
-    />
-  );
+  return <progress id="question-time" value={remainingTime} max={timeout} />;
 }

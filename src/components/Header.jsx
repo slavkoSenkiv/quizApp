@@ -1,9 +1,9 @@
-import quizLogo  from "../assets/quiz-logo.png";
+import headerImg  from "../assets/quiz-logo.png";
 export default function Header() {
   return (
     <header>
-      <img src={quizLogo} alt="" />
-      <h1>Reactoquiz</h1>
+      <img src={headerImg} alt="" />
+      <h1>Quiz app</h1>
     </header>
   );
 }

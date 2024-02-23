@@ -5,28 +5,35 @@ import Question from "./Question";
 export default function Quiz() {
   const [answers, setAnswers] = useState([]);
   const currentQuestionIndex = answers.length;
+  const quizIsComplete = currentQuestionIndex === QUESTIONS.length;
 
-  function handleSelectAnswer(answer) {
-    setAnswers((prevAnswers) => {
-      return [...prevAnswers, answer];
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
+    setAnswers((prevUserAnswers) => {
+      return [...prevUserAnswers, selectedAnswer];
     });
-    console.log(answers);
-  }
+  },
+  []);
 
-  function handleSkipAnswer() {
-    setAnswers((prevAnswers) => {
-      return [...prevAnswers, null];
-    });
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
+
+  if (quizIsComplete) {
+    return (
+      <Summary userAnswers={userAnswers}/>
+    );
   }
   return (
-    <div id="quiz">
-      <progress value="2" max="3" />
+    <section id="quiz">
       <Question
-        questionText={QUESTIONS[currentQuestionIndex].text}
-        questionAnswers={QUESTIONS[currentQuestionIndex].answers}
+        key={activeQuestionIndex}
+        index={activeQuestionIndex}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />
-    </div>
+    </section>
   );
 }
