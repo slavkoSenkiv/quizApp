@@ -17,12 +17,13 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
     isCorrect: null,
   });
 
-
-
-  setTimeout(() => {
-    console.log("run skip");
-    onSkipAnswer();
-  }, 3000);
+  let timer = 10000;
+  if (answer.selectedAnswer) {
+    timer = 1000;
+  }
+  if (answer.isCorrect !== null) {
+    timer = 2000;
+  }
 
   function handleSelectAnswer(answer) {
     setAnswer({
@@ -42,7 +43,7 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
     }, 1000);
   }
 
-  let answerState;
+  let answerState = "";
 
   if (answer.selectedAnswer && answer.isCorrect !== null) {
     answerState = answer.isCorrect ? "correct" : "wrong";
@@ -51,8 +52,13 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
   }
 
   return (
-    <div id="question-overview">
-      <CountDown />
+    <div id="question">
+      <CountDown
+        key={timer}
+        timeout={timer}
+        onTimeout={answer.selectedAnswer === "" ? onSkipAnswer : null}
+        mode={answerState}
+      />
       <h2>{QUESTIONS[index].text}</h2>
       <Answers
         answers={QUESTIONS[index].answers}

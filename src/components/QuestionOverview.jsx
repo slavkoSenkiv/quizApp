@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import QUESTIONS from "../../questions";
-import Summary from "./Summary";
 import Question from "./Question";
+import Summary from "./Summary";
 
 /* 
 quizOverview
@@ -15,25 +15,26 @@ quizOverview
 */
 
 export default function Quiz() {
-  const [answers, setAnswers] = useState([]); //(["", "","","","","","" ]);
+  const [answers, setAnswers] = useState([]);
   const currentQuestionIndex = answers.length;
   const quizIsComplete = currentQuestionIndex === QUESTIONS.length;
 
-  function handleSelectAnswer(answer) {
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(answer) {
     setAnswers((prevAnswers) => {
       return [...prevAnswers, answer];
     });
     console.log(answers);
-  }
+  }, []);
 
-  function handleSkipAnswer() {
-    setAnswers((prevAnswers) => {
-      return [...prevAnswers, null];
-    });
-  }
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
 
   if (quizIsComplete) {
-    return <Summary />;
+    return (
+      <Summary userAnswers={answers}/>
+    );
   }
 
   return (

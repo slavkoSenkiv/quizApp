@@ -14,7 +14,7 @@ export default function Answers({
 
   return (
     <ul id="answers">
-      {shuffledAnswers.current.map((answer, index) => {
+      {shuffledAnswers.current.map((answer) => {
         const isSelected = selectedAnswer === answer;
         let btnClass;
         if (
@@ -25,7 +25,7 @@ export default function Answers({
         }
 
         return (
-          <li key={index} className="answer">
+          <li key={answer} className="answer">
             <button
               onClick={() => onSelect(answer)}
               className={btnClass}
